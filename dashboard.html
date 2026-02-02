@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google TV Flex</title>
+    <style>
+        :root {
+            --bg-dark: #0f1014;
+            --icon-size: 145px; /* Ícones maiores como solicitado */
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-dark) no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: background-image 1.2s ease-in-out;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg-dark) 12%, rgba(15,16,20,0.2) 50%, rgba(0,0,0,0.4) 100%);
+            z-index: 1;
+        }
+
+        .content { position: relative; z-index: 2; padding: 0 5% 6% 5%; }
+
+        .featured-info h2 { 
+            font-size: 75px; margin: 0; font-weight: 700;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.9);
+            margin-bottom: 65px; /* Distância aumentada entre texto e ícones */
+        }
+
+        .app-row { display: flex; gap: 40px; align-items: center; }
+
+        .app-item {
+            display: flex; flex-direction: column; align-items: center;
+            text-decoration: none; color: white; transition: 0.3s; width: var(--icon-size);
+        }
+
+        .icon-wrapper {
+            width: var(--icon-size); height: var(--icon-size);
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            border: 4px solid transparent; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* ESTADO NORMAL: Ícones em Escala de Cinza */
+        .app-item img {
+            width: 55%; height: 55%; object-fit: contain;
+            filter: grayscale(100%) brightness(0.7);
+            transition: 0.4s ease;
+        }
+
+        /* ESTADO DESTAQUE (Hover/Focus) */
+        .app-item:hover .icon-wrapper, .app-item:focus .icon-wrapper {
+            transform: scale(1.2);
+            background: white;
+            box-shadow: 0 0 50px rgba(255,255,255,0.6);
+        }
+
+        /* REVELA CORES ORIGINAIS NO HOVER */
+        .app-item:hover img, .app-item:focus img {
+            filter: grayscale(0%) brightness(1);
+        }
+
+        .app-item span { 
+            margin-top: 20px; font-size: 22px; font-weight: 600; 
+            opacity: 0; transition: 0.3s;
+        }
+
+        .app-item:hover span { opacity: 1; }
+
+        .clock { position: fixed; top: 40px; right: 5%; font-size: 40px; z-index: 3; font-weight: 300; }
+    </style>
+</head>
+<body>
+
+    <div class="overlay"></div>
+    <div class="clock" id="clock">00:00</div>
+
+    <div class="content">
+        <div class="featured-info">
+            <h2 id="movie-title">Pronto para assistir</h2>
+        </div>
+
+        <div class="app-row">
+            <a href="https://www.netflix.com" class="app-item">
+                <div class="icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/netflix.svg"></div>
+                <span>Netflix</span>
+            </a>
+            <a href="https://www.youtube.com" class="app-item">
+                <div class="icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg"></div>
+                <span>YouTube</span>
+            </a>
+            <a href="https://www.disneyplus.com" class="app-item">
+                <div class="icon-wrapper"><img src="https://www.vectorlogo.zone/logos/disneyplus/disneyplus-icon.svg"></div>
+                <span>Disney+</span>
+            </a>
+            <a href="https://www.primevideo.com" class="app-item">
+                <div class="icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/primevideo.svg"></div>
+                <span>Prime</span>
+            </a>
+            <a href="https://tv.apple.com" class="app-item">
+                <div class="icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg"></div>
+                <span>Apple TV+</span>
+            </a>
+            <a href="https://www.max.com" class="app-item">
+                <div class="icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/hbo.svg"></div>
+                <span>HBO Max</span>
+            </a>
+            <a href="https://pluto.tv" class="app-item">
+                <div class="icon-wrapper"><img src="https://www.vectorlogo.zone/logos/plutotv/plutotv-icon.svg"></div>
+                <span>Pluto TV</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+        }
+
+        async function updateBackground() {
+            try {
+                const res = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=50a498a44b94f61f70d585483f98c87f&language=pt-BR');
+                const data = await res.json();
+                const movie = data.results[Math.floor(Math.random() * 10)];
+                const imgUrl = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+                
+                const img = new Image();
+                img.src = imgUrl;
+                img.onload = () => {
+                    document.body.style.backgroundImage = `url('${imgUrl}')`;
+                    document.getElementById('movie-title').textContent = movie.title || movie.name;
+                };
+            } catch (e) { console.log("Erro de API."); }
+        }
+
+        setInterval(updateClock, 1000);
+        setInterval(updateBackground, 20000);
+        updateClock();
+        updateBackground();
+    </script>
+</body>
+</html>
