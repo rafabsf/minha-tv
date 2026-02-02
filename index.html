@@ -7,84 +7,84 @@
     <style>
         :root {
             --bg-dark: #0f1014;
-            --icon-size: 145px; 
+            --circle-base: rgba(255, 255, 255, 0.07);
+            --icon-size: 140px; 
         }
 
         body {
             margin: 0;
             background: var(--bg-dark) no-repeat center center fixed;
             background-size: cover;
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             color: white;
             height: 100vh;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            transition: background-image 1.2s ease-in-out;
+            transition: background-image 1s ease-in-out;
+            overflow: hidden;
         }
 
         .overlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(to top, var(--bg-dark) 15%, rgba(15,16,20,0.1) 50%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(to top, var(--bg-dark) 10%, transparent 80%);
             z-index: 1;
         }
 
-        .content { position: relative; z-index: 2; padding: 0 5% 6% 5%; }
+        .content { position: relative; z-index: 2; padding: 0 5% 5% 5%; }
 
         .featured-info h2 { 
-            font-size: 70px; margin: 0; font-weight: 700;
-            text-shadow: 0 4px 25px rgba(0,0,0,1);
-            margin-bottom: 70px;
+            font-size: 65px; 
+            margin-bottom: 50px; 
+            font-weight: 700;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8); 
         }
 
-        .app-row { display: flex; gap: 30px; align-items: center; flex-wrap: wrap; }
+        .app-row { display: flex; gap: 20px; align-items: center; }
 
         .app-item {
             display: flex; flex-direction: column; align-items: center;
-            text-decoration: none; color: white; transition: 0.3s; width: var(--icon-size);
+            text-decoration: none; color: white; width: var(--icon-size);
         }
 
         .icon-wrapper {
             width: var(--icon-size); height: var(--icon-size);
-            background: rgba(255,255,255,0.1); /* Fundo cinza escuro nítido igual à sua imagem */
+            background: var(--circle-base); 
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             position: relative;
-            overflow: hidden;
         }
 
         .icon-wrapper img {
-            width: 55%; height: 55%; object-fit: contain;
-            position: absolute;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            width: 50%; height: 50%; object-fit: contain;
+            transition: all 0.3s ease;
+            /* ESTADO GHOST: Preto e sutilmente transparente */
+            filter: brightness(0);
+            opacity: 0.4;
         }
 
-        /* Imagem BRANCA (Estado Normal) */
-        .img-white { opacity: 1; z-index: 2; }
-
-        /* Imagem COLORIDA (Estado Hover) */
-        .img-color { opacity: 0; z-index: 1; transform: scale(0.8); }
-
-        /* HOVER: Fundo fica branco, ícone branco some e colorido aparece */
+        /* ESTADO HOVER: O círculo fica branco e o logo ganha cor total */
         .app-item:hover .icon-wrapper {
             transform: scale(1.15);
-            background: white;
-            box-shadow: 0 0 50px rgba(255,255,255,0.4);
+            background: #ffffff;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
-        .app-item:hover .img-white { opacity: 0; }
-        .app-item:hover .img-color { opacity: 1; z-index: 3; transform: scale(1); }
+        .app-item:hover img {
+            filter: brightness(1); /* Remove o preto */
+            opacity: 1; /* Cor total */
+            transform: scale(1.1);
+        }
 
         .app-item span { 
-            margin-top: 15px; font-size: 18px; font-weight: 600; 
-            opacity: 0; transition: 0.3s;
+            margin-top: 15px; font-size: 18px; font-weight: 600;
+            opacity: 0; transform: translateY(10px); transition: 0.3s; 
         }
 
-        .app-item:hover span { opacity: 1; }
+        .app-item:hover span { opacity: 1; transform: translateY(0); }
 
-        .clock { position: fixed; top: 40px; right: 5%; font-size: 38px; z-index: 3; font-weight: 300; }
+        .clock { position: fixed; top: 40px; right: 5%; font-size: 35px; z-index: 3; font-weight: 300; }
     </style>
 </head>
 <body>
@@ -93,72 +93,36 @@
     <div class="clock" id="clock">00:00</div>
 
     <div class="content">
-        <div class="featured-info">
-            <h2 id="movie-title">Pronto para assistir</h2>
-        </div>
-
+        <div class="featured-info"><h2 id="movie-title">Pronto para assistir</h2></div>
+        
         <div class="app-row">
             <a href="https://www.netflix.com" class="app-item">
-                <div class="icon-wrapper">
-                    <img src="https://www.vectorlogo.zone/logos/netflix/netflix-icon.svg" class="img-white" style="filter: brightness(0) invert(1);">
-                    <img src="https://www.vectorlogo.zone/logos/netflix/netflix-icon.svg" class="img-color">
-                </div>
+                <div class="icon-wrapper"><img src="https://cdn.worldvectorlogo.com/logos/netflix-3.svg"></div>
                 <span>Netflix</span>
             </a>
 
             <a href="https://www.youtube.com" class="app-item">
-                <div class="icon-wrapper">
-                    <img src="https://www.vectorlogo.zone/logos/youtube/youtube-icon.svg" class="img-white" style="filter: brightness(0) invert(1);">
-                    <img src="https://www.vectorlogo.zone/logos/youtube/youtube-icon.svg" class="img-color">
-                </div>
+                <div class="icon-wrapper"><img src="https://cdn.worldvectorlogo.com/logos/youtube-icon.svg"></div>
                 <span>YouTube</span>
             </a>
 
-            <a href="https://music.youtube.com" class="app-item">
-                <div class="icon-wrapper">
-                    <img src="https://www.vectorlogo.zone/logos/youtube_music/youtube_music-icon.svg" class="img-white" style="filter: brightness(0) invert(1);">
-                    <img src="https://www.vectorlogo.zone/logos/youtube_music/youtube_music-icon.svg" class="img-color">
-                </div>
-                <span>YT Music</span>
-            </a>
-
             <a href="https://www.disneyplus.com" class="app-item">
-                <div class="icon-wrapper">
-                    <img src="https://www.vectorlogo.zone/logos/disneyplus/disneyplus-icon.svg" class="img-white" style="filter: brightness(0) invert(1);">
-                    <img src="https://www.vectorlogo.zone/logos/disneyplus/disneyplus-icon.svg" class="img-color">
-                </div>
+                <div class="icon-wrapper"><img src="https://cdn.worldvectorlogo.com/logos/disney-plus-1.svg"></div>
                 <span>Disney+</span>
             </a>
 
             <a href="https://www.primevideo.com" class="app-item">
-                <div class="icon-wrapper">
-                    <img src="https://www.vectorlogo.zone/logos/amazon_primevideo/amazon_primevideo-icon.svg" class="img-white" style="filter: brightness(0) invert(1);">
-                    <img src="https://www.vectorlogo.zone/logos/amazon_primevideo/amazon_primevideo-icon.svg" class="img-color">
-                </div>
+                <div class="icon-wrapper"><img src="https://cdn.worldvectorlogo.com/logos/amazon-prime-video-1.svg"></div>
                 <span>Prime</span>
             </a>
 
             <a href="https://tv.apple.com" class="app-item">
-                <div class="icon-wrapper">
-                    <img src="https://www.vectorlogo.zone/logos/apple_tv/apple_tv-icon.svg" class="img-white" style="filter: brightness(0) invert(1);">
-                    <img src="https://www.vectorlogo.zone/logos/apple_tv/apple_tv-icon.svg" class="img-color">
-                </div>
+                <div class="icon-wrapper"><img src="https://cdn.worldvectorlogo.com/logos/apple-tv-1.svg"></div>
                 <span>Apple TV+</span>
             </a>
 
-            <a href="https://globoplay.globo.com" class="app-item">
-                <div class="icon-wrapper">
-                    <img src="https://cdn.worldvectorlogo.com/logos/globoplay.svg" class="img-white" style="filter: brightness(0) invert(1);">
-                    <img src="https://cdn.worldvectorlogo.com/logos/globoplay.svg" class="img-color">
-                </div>
-                <span>Globoplay</span>
-            </a>
-
             <a href="https://www.max.com" class="app-item">
-                <div class="icon-wrapper">
-                    <img src="https://www.vectorlogo.zone/logos/hbo/hbo-icon.svg" class="img-white" style="filter: brightness(0) invert(1);">
-                    <img src="https://www.vectorlogo.zone/logos/hbo/hbo-icon.svg" class="img-color">
-                </div>
+                <div class="icon-wrapper"><img src="https://cdn.worldvectorlogo.com/logos/hbo-max-1.svg"></div>
                 <span>HBO Max</span>
             </a>
         </div>
@@ -169,17 +133,19 @@
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
         }
+
         async function updateBackground() {
             const key = '50a498a44b94f61f70d585483f98c87f';
             try {
                 const res = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${key}&language=pt-BR`);
                 const data = await res.json();
-                const movie = data.results[Math.floor(Math.random() * 10)];
+                const movie = data.results[Math.floor(Math.random() * 8)];
                 const imgUrl = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
                 document.body.style.backgroundImage = `url('${imgUrl}')`;
                 document.getElementById('movie-title').textContent = movie.title || movie.name;
-            } catch (e) { console.log("Erro API"); }
+            } catch (e) { console.error("Erro na API"); }
         }
+
         setInterval(updateClock, 1000);
         setInterval(updateBackground, 30000);
         updateClock();
